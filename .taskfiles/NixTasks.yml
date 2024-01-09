@@ -1,0 +1,10 @@
+version: "3"
+
+tasks:
+
+  install:
+    desc: Install Nix-Shell
+    cmds:
+    - sh <(curl -L https://nixos.org/nix/install) --daemon
+    status:
+    - nix --version

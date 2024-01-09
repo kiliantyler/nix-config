@@ -1,0 +1,10 @@
+version: "3"
+
+includes:
+  ansible: .taskfiles/NixTasks.yml
+
+tasks:
+  default:
+    silent: true
+    cmds:
+    - task -l
