@@ -1,7 +1,7 @@
 version: "3"
 
 includes:
-  ansible: .taskfiles/NixTasks.yml
+  nix: .taskfiles/NixTasks.yml
 
 tasks:
   default:
