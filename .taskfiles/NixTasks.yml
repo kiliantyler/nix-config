@@ -5,7 +5,10 @@ tasks:
   install:
     desc: Install Nix-Shell
     cmds:
-    - curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install --no-confirm
+    - curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix/tag/${VERSION} | sh -s -- install --no-confirm
+    env:
+      # TODO: Add renovate tag to this task | https://github.com/DeterminateSystems/nix-installer/releases
+      VERSION: "v0.16.0"
     status:
     - nix --version
 
