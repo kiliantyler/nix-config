@@ -5,6 +5,13 @@ tasks:
   install:
     desc: Install Nix-Shell
     cmds:
-    - curl -L https://nixos.org/nix/install | sh -s -- --daemon --yes
+    - curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install
+    status:
+    - nix --version
+
+  activate:
+    desc: Activate Nix-Shell
+    cmds:
+    - . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
     status:
     - nix --version
