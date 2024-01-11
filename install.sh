@@ -7,6 +7,4 @@ sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b ~/.nix-confi
 
 ~/.nix-config/.task/task -t ~/nix-config/Taskfile.yaml nix:install
 
-~/.nix-config/.task/task -t ~/nix-config/Taskfile.yaml nix:activate
-
 }

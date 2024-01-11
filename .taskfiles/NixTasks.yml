@@ -11,10 +11,3 @@ tasks:
       VERSION: "v0.16.0"
     status:
     - nix --version
-
-  activate:
-    desc: Activate Nix-Shell
-    cmds:
-    - . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
-    status:
-    - nix --version
