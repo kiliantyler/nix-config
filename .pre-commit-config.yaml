@@ -30,6 +30,6 @@ repos:
     args: [-c=.yamllint]
 
 - repo: https://github.com/nix-community/nixpkgs-fmt
-  rev: master
+  rev: v1.3.0
   hooks:
   - id: nixpkgs-fmt
