@@ -1,13 +1,13 @@
 #!/bin/sh
 { # Prevents execution if this script was only partially downloaded
 
-PATH="/fakepath:$PATH"
-# git clone https://github.com/kiliantyler/nix-config ~/nix-config
+# Allows us to run this as if everything were already installed
+PATH="${HOME}/nix-config/.task:/nix/var/nix/profiles/default/bin"
 
-# sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b ~/nix-config/.task
+git clone https://github.com/kiliantyler/nix-config ~/nix-config
 
-# ~/nix-config/.task/task -d ~/nix-config nix:setup-all
+sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b ~/nix-config/.task
 
-task path
+task -d ~/nix-config nix:setup-all
 
 }
