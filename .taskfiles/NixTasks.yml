@@ -1,16 +1,13 @@
 version: "3"
 
-env:
-  PATH: "/nix/var/nix/profiles/default/bin:$PATH"
-
 tasks:
 
   check-nix:
     desc: "Check if Nix is already installed"
     cmds:
-    - command -v nix >/dev/null 2>&1 && echo "Nix is already installed" || exit 1
+    - "{{.PREFIX}} command -v nix >/dev/null 2>&1 && echo 'Nix is already installed' || exit 1"
     status:
-    - command -v nix >/dev/null 2>&1
+    - "{{.PREFIX}} command -v nix >/dev/null 2>&1"
 
   install-nix:
     desc: Install Nix-Shell
@@ -27,17 +24,17 @@ tasks:
   check-home-manager:
     desc: "Check if Home Manager is already installed"
   cmds:
-  - command -v home-manager >/dev/null 2>&1 && echo "Home Manager is already installed" || exit 1
+  - "{{.PREFIX}} command -v home-manager >/dev/null 2>&1 && echo 'Home Manager is already installed' || exit 1"
   status:
-  - command -v home-manager >/dev/null 2>&1
+  - "{{.PREFIX}} command -v home-manager >/dev/null 2>&1"
 
   install-home-manager:
     desc: "Install Home Manager"
     cmds:
     - echo "Installing Home Manager..."
-    - nix-channel --add https://github.com/nix-community/home-manager/archive/master.tar.gz home-manager
-    - nix-channel --update
-    - nix-shell '<home-manager>' -A install
+    - "{{.PREFIX}} nix-channel --add https://github.com/nix-community/home-manager/archive/master.tar.gz home-manager"
+    - "{{.PREFIX}} nix-channel --update"
+    - "{{.PREFIX}} nix-shell '<home-manager>' -A install"
     - echo "Home Manager installed successfully."
     status:
     - check-home-manager
@@ -45,16 +42,16 @@ tasks:
   check-nix-darwin:
     desc: "Check if nix-darwin is already installed"
     cmds:
-    - command -v darwin-rebuild >/dev/null 2>&1 && echo "nix-darwin is already installed" || exit 1
+    - "{{.PREFIX}} command -v darwin-rebuild >/dev/null 2>&1 && echo 'nix-darwin is already installed' || exit 1"
     status:
-    - command -v darwin-rebuild >/dev/null 2>&1
+    - "{{.PREFIX}} command -v darwin-rebuild >/dev/null 2>&1"
 
   install-nix-darwin:
     desc: "Install nix-darwin"
     cmds:
     - echo "Installing nix-darwin..."
-    - nix-build https://github.com/LnL7/nix-darwin/archive/master.tar.gz -A installer
-    - ./result/bin/darwin-installer
+    - "{{.PREFIX}} nix-build https://github.com/LnL7/nix-darwin/archive/master.tar.gz -A installer"
+    - "{{.PREFIX}} ./result/bin/darwin-installer"
     - echo "nix-darwin installed successfully."
     status:
     - check-nix-darwin

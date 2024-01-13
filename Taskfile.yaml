@@ -1,5 +1,8 @@
 version: "3"
 
+vars:
+  PREFIX: env PATH="${HOME}/nix-config/.task:/nix/var/nix/profiles/default/bin"
+
 includes:
   precommit: .taskfiles/PrecommitTasks.yml
   nix: .taskfiles/NixTasks.yml
