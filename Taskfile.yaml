@@ -1,6 +1,7 @@
 version: "3"
 
 includes:
+  precommit: .taskfiles/PrecommitTasks.yml
   nix: .taskfiles/NixTasks.yml
 
 tasks:
