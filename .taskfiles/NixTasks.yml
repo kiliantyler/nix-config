@@ -55,7 +55,7 @@ tasks:
     cmds:
     - echo "Installing nix-darwin..."
     - echo "This can hang for a while, please be patient..."
-    - nix-shell -p darwin-rebuild --run 'darwin-rebuild switch --flake .#mac'
+    - nix run nix-darwin -- switch --flake ~/nix-config
     - echo "nix-darwin installed successfully."
     status:
     - command -v darwin-rebuild >/dev/null 2>&1
