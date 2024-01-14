@@ -33,8 +33,8 @@ tasks:
     - sudo mv /etc/zshenv /etc/zshenv.before-darwin-nix
     - echo "Removed /etc files successfully."
     status:
-    - "test ! -d /etc/nix/nix.conf"
-    - "test ! -d /etc/zshenv"
+    - "test ! -f /etc/nix/nix.conf"
+    - "test ! -f /etc/zshenv"
 
   # install-home-manager:
   #   desc: "Install Home Manager"
