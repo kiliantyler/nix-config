@@ -15,5 +15,6 @@
         ];
       };
     };
+    darwinPackages = self.darwinConfigurations.mac.pkgs;
   };
 }
