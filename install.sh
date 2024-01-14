@@ -11,11 +11,6 @@
 # -b <branch>: Branch to install from
 # -n: Non-interactive mode
 
-if command -v nix >/dev/null 2>&1; then
-  echo "Nix already installed."
-  exit 0
-fi
-
 GIT_REPO="https://github.com/kiliantyler/nix-config"
 REPO_LOCATION="${HOME}/nix-config"
 BRANCH="master"
@@ -37,33 +32,35 @@ while getopts "d:b:n:r:" opt; do
       ;;
     \?)
       echo "Invalid option: -$OPTARG" >&2
+      exit 1
       ;;
   esac
 done
 
 if [ "${NON_INTERACTIVE}" = false ]; then
   echo "Enter the directory to install nix-config to (default: ${REPO_LOCATION}):"
-  read -r response
-  if [ -n "$response" ]; then
-    REPO_LOCATION=$response
+  read -r repo_location
+  if [ -n "$repo_location" ]; then
+    REPO_LOCATION=$repo_location
   fi
   echo "Enter the git repo to install from (default: ${GIT_REPO}):"
-  read -r response
-  if [ -n "$response" ]; then
-    GIT_REPO=$response
+  read -r git_repo
+  if [ -n "$git_repo" ]; then
+    GIT_REPO=$git_repo
   fi
   echo "Enter the branch to install from (default: ${BRANCH}):"
-  read -r response
-  if [ -n "$response" ]; then
-    BRANCH=$response
+  read -r branch
+  if [ -n "$branch" ]; then
+    BRANCH=$branch
   fi
   echo "This script will install nix-config (${BRANCH}) to ${REPO_LOCATION}."
-  echo "Continue? (y/n)"
+  echo "Continue? (y/N)"
   read -r response
-  if [ "$response" != "y" ]; then
+  if ! echo "$response" | grep -E '^[yY][eE][sS]?$' >/dev/null 2>&1; then
     echo "Aborting."
     exit 1
   fi
+
 fi
 
 if [ -d "${REPO_LOCATION}" ]; then
@@ -73,6 +70,13 @@ fi
 
 # Allows us to run this as if everything were already installed
 PATH="${REPO_LOCATION}/.task:/nix/var/nix/profiles/default/bin:/run/current-system/sw/bin:$PATH"
+
+# Check if nix is already installed
+# This has to be done after the PATH is set
+if command -v nix >/dev/null 2>&1; then
+  echo "Nix already installed."
+  exit 0
+fi
 
 # Required for flakes to work in nix-command without having to set it in ~/.config/nix/nix.conf
 export NIX_CONFIG="experimental-features = nix-command flakes repl-flake"
