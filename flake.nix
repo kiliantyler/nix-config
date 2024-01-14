@@ -9,7 +9,7 @@
 
   outputs = { self, nix-darwin, nixpkgs, ... }: {
     darwinConfigurations = {
-      mac = darwin.lib.darwinSystem {
+      mac = nix-darwin.lib.darwinSystem {
         modules = [
           ./darwin-configuration.nix
         ];
