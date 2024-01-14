@@ -5,8 +5,11 @@
     [
       pkgs.git
     ];
-  programs.home-manager.enable = true;
-  programs.home-manager.path = "${pkgs.home-manager}/bin/home-manager";
+
+  imports = [ <home-manager/nix-darwin> ];
+
+  # programs.home-manager.enable = true;
+  # programs.home-manager.path = "${pkgs.home-manager}/bin/home-manager";
   # Auto upgrade nix package and the daemon service.
   services.nix-daemon.enable = true;
   # nix.package = pkgs.nix;
