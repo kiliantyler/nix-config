@@ -25,16 +25,28 @@ tasks:
     - command -v home-manager >/dev/null 2>&1
     deps: [install-nix]
 
-  remove-etc-files:
-    desc: "Remove /etc files"
+  remove-etc-nixconf:
+    desc: "Rename existing /etc/nix/nix.conf file"
     cmds:
-    - echo "Removing /etc files..."
+    - echo "Removing /etc/nix/nix.conf..."
     - sudo mv /etc/nix/nix.conf /etc/nix/nix.conf.before-darwin-nix
+    - echo "Removed /etc/nix/nix.conf successfully."
+    status:
+    - "test ! -f /etc/nix/nix.conf"
+
+  remove-etc-zshenv:
+    cmds:
+    - echo "Removing /etc/zshenv..."
     - sudo mv /etc/zshenv /etc/zshenv.before-darwin-nix
     - echo "Removed /etc files successfully."
     status:
-    - "test ! -f /etc/nix/nix.conf"
     - "test ! -f /etc/zshenv"
+
+  remove-etc-files:
+    desc: "Rename existing /etc files"
+    cmds:
+    - task: remove-etc-nixconf
+    - task: remove-etc-zshenv
 
   # install-home-manager:
   #   desc: "Install Home Manager"
