@@ -9,7 +9,7 @@
 
   outputs = { self, nix-darwin, nixpkgs, ... }: {
     darwinConfigurations = {
-      mac = nix-darwin.lib.darwinSystem {
+      "Kilians-Virtual-Machine" = nix-darwin.lib.darwinSystem {
         modules = [
           ./darwin-configuration.nix
         ];
