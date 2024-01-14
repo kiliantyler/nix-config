@@ -2,13 +2,6 @@ version: "3"
 
 tasks:
 
-  check-nix:
-    desc: "Check if Nix is already installed"
-    cmds:
-    - "command -v nix >/dev/null 2>&1 && echo 'Nix is already installed' || exit 1"
-    status:
-    - "command -v nix >/dev/null 2>&1"
-
   install-nix:
     desc: Install Nix-Shell
     cmds:
@@ -19,33 +12,53 @@ tasks:
       # TODO: Add renovate tag to this task | https://github.com/DeterminateSystems/nix-installer/releases
       VERSION: "v0.16.0"
     status:
-    - check-nix
+    - "command -v nix >/dev/null 2>&1"
 
-  check-home-manager:
-    desc: "Check if Home Manager is already installed"
-  cmds:
-  - "command -v home-manager >/dev/null 2>&1 && echo 'Home Manager is already installed' || exit 1"
-  status:
-  - "command -v home-manager >/dev/null 2>&1"
-
-  install-home-manager:
-    desc: "Install Home Manager"
+  setup-home-manager:
+    desc: "Set up Home Manager"
     cmds:
-    - echo "Installing Home Manager..."
-    - "nix-channel --add https://github.com/nix-community/home-manager/archive/master.tar.gz home-manager"
-    - "nix-channel --update"
-    - echo "This can hang for a while, please be patient..."
-    - "nix-shell '<home-manager>' -A install"
-    - echo "Home Manager installed successfully."
+    - echo "Setting up Home Manager..."
+    - nix-channel --add https://github.com/nix-community/home-manager/archive/master.tar.gz home-manager
+    - nix-channel --update
+    - echo "Home Manager set up successfully."
     status:
-    - check-home-manager
+    - command -v home-manager >/dev/null 2>&1
+    deps: [install-nix]
 
-  check-nix-darwin:
-    desc: "Check if nix-darwin is already installed"
+  remove-etc-nixconf:
+    desc: "Rename existing /etc/nix/nix.conf file"
     cmds:
-    - "command -v darwin-rebuild >/dev/null 2>&1 && echo 'nix-darwin is already installed' || exit 1"
+    - echo "Removing /etc/nix/nix.conf..."
+    - sudo mv /etc/nix/nix.conf /etc/nix/nix.conf.before-darwin-nix
+    - echo "Removed /etc/nix/nix.conf successfully."
     status:
-    - "{{.PREFIX}} command -v darwin-rebuild >/dev/null 2>&1"
+    - "test ! -f /etc/nix/nix.conf"
+
+  remove-etc-zshenv:
+    cmds:
+    - echo "Removing /etc/zshenv..."
+    - sudo mv /etc/zshenv /etc/zshenv.before-darwin-nix
+    - echo "Removed /etc files successfully."
+    status:
+    - "test ! -f /etc/zshenv"
+
+  remove-etc-files:
+    desc: "Rename existing /etc files"
+    cmds:
+    - task: remove-etc-nixconf
+    - task: remove-etc-zshenv
+
+  # install-home-manager:
+  #   desc: "Install Home Manager"
+  #   cmds:
+  #   - echo "Installing Home Manager..."
+  #   - "nix-channel --add https://github.com/nix-community/home-manager/archive/master.tar.gz home-manager"
+  #   - "nix-channel --update"
+  #   - echo "This can hang for a while, please be patient..."
+  #   - "nix-shell '<home-manager>' -A install"
+  #   - echo "Home Manager installed successfully."
+  #   status:
+  #   - check-home-manager
 
   # TODO: This should be done in flakes
   # https://github.com/LnL7/nix-darwin#flakes
@@ -54,21 +67,17 @@ tasks:
     cmds:
     - echo "Installing nix-darwin..."
     - echo "This can hang for a while, please be patient..."
-    - "nix-build https://github.com/LnL7/nix-darwin/archive/master.tar.gz -A installer"
-    # TODO: This has 2 things to respond to -- needs to be unattended
-    - "./result/bin/darwin-installer"
+    - nix run nix-darwin -- switch --flake ~/nix-config
     - echo "nix-darwin installed successfully."
     status:
-    - check-nix-darwin
+    - command -v darwin-rebuild >/dev/null 2>&1
+    deps: [install-nix, setup-home-manager, remove-etc-files]
 
   setup-all:
     desc: "Set up Nix, Home Manager, and nix-darwin"
     cmds:
     - task: install-nix
-    - task: install-home-manager
+    - task: setup-home-manager
+    - task: remove-etc-files
     - task: install-nix-darwin
     - echo "All set up! Run 'darwin-rebuild switch' to apply changes."
-    status:
-    - check-nix
-    - check-home-manager
-    - check-nix-darwin

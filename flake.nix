@@ -1,61 +1,22 @@
 {
-  description = "kiliantyler Nix Flake";
+  description = "Darwin attempt 1";
 
   inputs = {
-    # Nixpkgs and unstable
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-23.11";
-    nixpkgs-unstable.url = "github:nixos/nixpkgs/nixpkgs-unstable";
-
-    # Home manager
-    home-manager = {
-      url = "github:nix-community/home-manager/release-23.11";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    # nix-darwin
-    nix-darwin = {
-      url = "github:LnL7/nix-darwin";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    # Flake-parts
-    flake-parts = {
-      url = "github:hercules-ci/flake-parts";
-    };
+    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+    nix-darwin.url = "github:LnL7/nix-darwin";
+    nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
+    home-manager.url = "github:nix-community/home-manager";
+    home-manager.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = { flake-parts, ... }@inputs:
-    let
-      myLib = import ./lib/default.nix { inherit inputs; };
-    in
-    inputs.flake-parts.lib.mkFlake { inherit inputs; } {
-      systems = [
-        "aarch64-darwin"
-        "aarch64-linux"
-        "x86_64-linux"
-      ];
-      perSystem = {
-        inputs',
-        pkgs,
-        self',
-        ...
-      }: {
-        legacyPackages = import ./packages { inherit inputs' pkgs; };
-        packages = {
-          harlequin = self'.legacyPackages.harlequin;
-        };
-        # devShells.default = import ./nixos/packages/shell.nix { inherit inputs' pkgs; };
-      };
-
-      flake.nixosConfigurations = {
-        nas = myLib.mkNixosSystem     "x86_64-linux"  "gladius";
-        test-vm = myLib.mkNixosSystem "aarch64-linux" "test-vm";
-      };
-
-      # Build darwin flake using:
-      # $ darwin-rebuild build --flake .#<hostname>
-      flake.darwinConfigurations = {
-        personal-macbook = myLib.mkDarwinSystem "aarch64-darwin" "bernd-macbook";
+  outputs = { self, nix-darwin, nixpkgs, ... }: {
+    darwinConfigurations = {
+      "Kilians-Virtual-Machine" = nix-darwin.lib.darwinSystem {
+        modules = [
+          ./darwin-configuration.nix
+        ];
       };
     };
+    darwinPackages = self.darwinConfigurations.mac.pkgs;
+  };
 }
