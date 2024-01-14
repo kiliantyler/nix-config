@@ -23,6 +23,18 @@ tasks:
     - echo "Home Manager set up successfully."
     status:
     - command -v home-manager >/dev/null 2>&1
+    deps: [install-nix]
+
+  remove-etc-files:
+    desc: "Remove /etc files"
+    cmds:
+    - echo "Removing /etc files..."
+    - sudo mv /etc/nix/nix.conf /etc/nix/nix.conf.before-darwin-nix
+    - sudo mv /etc/zshenv /etc/zshenv.before-darwin-nix
+    - echo "Removed /etc files successfully."
+    status:
+    - "test ! -d /etc/nix/nix.conf"
+    - "test ! -d /etc/zshenv"
 
   # install-home-manager:
   #   desc: "Install Home Manager"
@@ -47,11 +59,13 @@ tasks:
     - echo "nix-darwin installed successfully."
     status:
     - command -v darwin-rebuild >/dev/null 2>&1
+    deps: [install-nix, setup-home-manager, remove-etc-files]
 
   setup-all:
     desc: "Set up Nix, Home Manager, and nix-darwin"
     cmds:
     - task: install-nix
     - task: setup-home-manager
+    - task: remove-etc-files
     - task: install-nix-darwin
     - echo "All set up! Run 'darwin-rebuild switch' to apply changes."
