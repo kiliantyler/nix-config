@@ -73,7 +73,7 @@ tasks:
     desc: "Set up Nix, Home Manager, and nix-darwin"
     cmds:
     - task: install-nix
-    - task: install-home-manager
+    - task: setup-home-manager
     - task: install-nix-darwin
     - echo "All set up! Run 'darwin-rebuild switch' to apply changes."
     status:
