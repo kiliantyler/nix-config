@@ -3,7 +3,7 @@
 
 # Allows us to run this as if everything were already installed
 PATH="${HOME}/nix-config/.task:/nix/var/nix/profiles/default/bin:$PATH"
-export NIX_CONFIG="experimental-features=nix-command flakes"
+export NIX_CONFIG="experimental-features = nix-command flakes repl-flake"
 
 git clone https://github.com/kiliantyler/nix-config ~/nix-config
 
