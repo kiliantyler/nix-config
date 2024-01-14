@@ -22,6 +22,7 @@ tasks:
     - nix-channel --update
     - echo "Home Manager set up successfully."
     status:
+    # TODO: This doesn't work
     - command -v home-manager >/dev/null 2>&1
     deps: [install-nix]
 
@@ -48,20 +49,6 @@ tasks:
     - task: remove-etc-nixconf
     - task: remove-etc-zshenv
 
-  # install-home-manager:
-  #   desc: "Install Home Manager"
-  #   cmds:
-  #   - echo "Installing Home Manager..."
-  #   - "nix-channel --add https://github.com/nix-community/home-manager/archive/master.tar.gz home-manager"
-  #   - "nix-channel --update"
-  #   - echo "This can hang for a while, please be patient..."
-  #   - "nix-shell '<home-manager>' -A install"
-  #   - echo "Home Manager installed successfully."
-  #   status:
-  #   - check-home-manager
-
-  # TODO: This should be done in flakes
-  # https://github.com/LnL7/nix-darwin#flakes
   install-nix-darwin:
     desc: "Install nix-darwin"
     cmds:
@@ -81,3 +68,4 @@ tasks:
     - task: remove-etc-files
     - task: install-nix-darwin
     - echo "All set up! Run 'darwin-rebuild switch' to apply changes."
+    - echo "You may need to restart your shell for changes to take effect."
