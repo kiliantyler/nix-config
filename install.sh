@@ -2,9 +2,9 @@
 { # Prevents execution if this script was only partially downloaded
 
 # This script is meant for quick & easy install via:
-# curl -fsSL https://raw.githubusercontent.com/kiliantyler/nix-config/master/install.sh | sh
+# sh -c "$(curl -fsSL https://raw.githubusercontent.com/kiliantyler/nix-config/master/install.sh)"
 # Default is to run this in interactive mode, if you want to run this in non-interactive mode:
-# curl -fsSL https://raw.githubusercontent.com/kiliantyler/nix-config/master/install.sh | sh -s -- -d ~/nix-config -b testingbranch -n
+# sh -c "$(curl -fsSL https://raw.githubusercontent.com/kiliantyler/nix-config/master/install.sh)" -- -n -d <folder> -r <repo> -b <branch>
 # Arguments:
 # -d <folder>: Directory to install nix-config to
 # -r <repo>: Git repo to install from
@@ -56,7 +56,7 @@ if [ "${NON_INTERACTIVE}" = false ]; then
   echo "This script will install nix-config (${BRANCH}) to ${REPO_LOCATION}."
   echo "Continue? (y/N)"
   read -r response
-  if ! echo "$response" | grep -E '^[yY][eE][sS]?$' >/dev/null 2>&1; then
+  if ! echo "$response" | grep -E '^[yY][eE]?[sS]?$' >/dev/null 2>&1; then
     echo "Aborting."
     exit 1
   fi
