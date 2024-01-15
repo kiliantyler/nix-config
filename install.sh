@@ -16,7 +16,8 @@ REPO_LOCATION="${HOME}/nix-config"
 BRANCH="master"
 NON_INTERACTIVE=false
 
-while getopts "d:b:n:r:" opt; do
+# check for arguments
+while getopts ":d:b:n:r:" opt; do
   case $opt in
     d)
       REPO_LOCATION=$OPTARG
