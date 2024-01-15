@@ -17,7 +17,7 @@ BRANCH="master"
 NON_INTERACTIVE=false
 
 # check for arguments
-while getopts ":d:b:n:r:" opt; do
+while getopts ":d:b:nr:" opt; do
   case $opt in
     d)
       REPO_LOCATION=$OPTARG
