@@ -16,7 +16,7 @@
     };
 
     flake-parts = {
-      url = "github:hercules-ci/flake-utils";
+      url = "github:hercules-ci/flake-parts";
     };
 
   };
