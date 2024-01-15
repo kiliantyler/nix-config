@@ -11,6 +11,10 @@
 # -b <branch>: Branch to install from
 # -n: Non-interactive mode
 
+# run sudo so that it doesn't ask for a password later on
+echo "Asking for sudo permissions so it doesn't ask for a password later on..."
+sudo echo "Starting nix-config install..."
+
 GIT_REPO="https://github.com/kiliantyler/nix-config"
 CONFIG_DIR="${HOME}/nix-config"
 BRANCH="master"
