@@ -60,7 +60,7 @@ tasks:
     - command -v darwin-rebuild >/dev/null 2>&1
     deps: [install-nix, setup-home-manager, remove-etc-files]
     vars:
-      CONFIG_DIR: '{{default $HOME/nix-config .CONFIG_DIR}}'
+      CONFIG_DIR: '{{default "$HOME/nix-config" .CONFIG_DIR}}'
 
 
   setup-all:
@@ -70,6 +70,5 @@ tasks:
     - task: setup-home-manager
     - task: remove-etc-files
     - task: install-nix-darwin
-      vars: {CONFIG_DIR: '{{.CONFIG_DIR}}'}
     - echo "All set up! Run 'darwin-rebuild switch' to apply changes."
     - echo "You may need to restart your shell for changes to take effect."
