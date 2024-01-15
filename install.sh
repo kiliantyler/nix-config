@@ -81,6 +81,8 @@ fi
 
 # Required for flakes to work in nix-command without having to set it in ~/.config/nix/nix.conf
 export NIX_CONFIG="experimental-features = nix-command flakes repl-flake"
+# Required for task to use the correct config directory
+export CONFIG_DIR="${CONFIG_DIR}"
 
 if ! command -v curl >/dev/null 2>&1; then
   echo "curl not installed, please install curl and try again."
