@@ -12,7 +12,7 @@
 # -n: Non-interactive mode
 
 GIT_REPO="https://github.com/kiliantyler/nix-config"
-REPO_LOCATION="${HOME}/nix-config"
+CONFIG_DIR="${HOME}/nix-config"
 BRANCH="master"
 NON_INTERACTIVE=false
 
@@ -20,7 +20,7 @@ NON_INTERACTIVE=false
 while getopts ":d:b:nr:" opt; do
   case $opt in
     d)
-      REPO_LOCATION=$OPTARG
+      CONFIG_DIR=$OPTARG
       ;;
     b)
       BRANCH=$OPTARG
@@ -39,10 +39,10 @@ while getopts ":d:b:nr:" opt; do
 done
 
 if [ "${NON_INTERACTIVE}" = false ]; then
-  echo "Enter the directory to install nix-config to (default: ${REPO_LOCATION}):"
-  read -r repo_location
-  if [ -n "$repo_location" ]; then
-    REPO_LOCATION=$repo_location
+  echo "Enter the directory to install nix-config to (default: ${CONFIG_DIR}):"
+  read -r config_dir
+  if [ -n "$config_dir" ]; then
+    CONFIG_DIR=$config_dir
   fi
   echo "Enter the git repo to install from (default: ${GIT_REPO}):"
   read -r git_repo
@@ -54,7 +54,7 @@ if [ "${NON_INTERACTIVE}" = false ]; then
   if [ -n "$branch" ]; then
     BRANCH=$branch
   fi
-  echo "This script will install nix-config (${BRANCH}) to ${REPO_LOCATION}."
+  echo "This script will install nix-config (${BRANCH}) to ${CONFIG_DIR}."
   echo "Continue? (y/N)"
   read -r response
   if ! echo "$response" | grep -E '^[yY][eE]?[sS]?$' >/dev/null 2>&1; then
@@ -64,13 +64,13 @@ if [ "${NON_INTERACTIVE}" = false ]; then
 
 fi
 
-if [ -d "${REPO_LOCATION}" ]; then
-  echo "Directory ${REPO_LOCATION} already exists, please remove it and try again."
+if [ -d "${CONFIG_DIR}" ]; then
+  echo "Directory ${CONFIG_DIR} already exists, please remove it and try again."
   exit 1
 fi
 
 # Allows us to run this as if everything were already installed
-PATH="${REPO_LOCATION}/.task:/nix/var/nix/profiles/default/bin:/run/current-system/sw/bin:$PATH"
+PATH="${CONFIG_DIR}/.task:/nix/var/nix/profiles/default/bin:/run/current-system/sw/bin:$PATH"
 
 # Check if nix is already installed
 # This has to be done after the PATH is set
@@ -88,15 +88,15 @@ if ! command -v curl >/dev/null 2>&1; then
 fi
 
 if command -v git >/dev/null 2>&1; then
-  git clone -b "${BRANCH}" "${GIT_REPO}" "${REPO_LOCATION}"
+  git clone -b "${BRANCH}" "${GIT_REPO}" "${CONFIG_DIR}"
 # TODO: Add a curl & wget fallback using github releases
 else
   echo "git not installed, please install git and try again."
   exit 1
 fi
 
-sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b "${REPO_LOCATION}/.task"
+sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b "${CONFIG_DIR}/.task"
 
-task -d "${REPO_LOCATION}" nix:setup-all
+task -d "${CONFIG_DIR}" nix:setup-all
 
 }

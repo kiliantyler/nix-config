@@ -54,11 +54,14 @@ tasks:
     cmds:
     - echo "Installing nix-darwin..."
     - echo "This can hang for a while, please be patient..."
-    - nix run nix-darwin -- switch --flake ~/nix-config
+    - "nix run nix-darwin -- switch --flake {{ .CONFIG_DIR }}"
     - echo "nix-darwin installed successfully."
     status:
     - command -v darwin-rebuild >/dev/null 2>&1
     deps: [install-nix, setup-home-manager, remove-etc-files]
+    vars:
+      CONFIG_DIR: '{{default $HOME/nix-config .CONFIG_DIR}}'
+
 
   setup-all:
     desc: "Set up Nix, Home Manager, and nix-darwin"
@@ -67,5 +70,6 @@ tasks:
     - task: setup-home-manager
     - task: remove-etc-files
     - task: install-nix-darwin
+      vars: {CONFIG_DIR: '{{.CONFIG_DIR}}'}
     - echo "All set up! Run 'darwin-rebuild switch' to apply changes."
     - echo "You may need to restart your shell for changes to take effect."
