@@ -34,9 +34,10 @@ repos:
   hooks:
   - id: nixpkgs-fmt
 
-- repo: https://github.com/astro/deadnix
-  rev: efcd46e3827d1e42e8f2f9cb045dfb34caeb43f5
-  hooks:
-  - id: deadnix
-    #args: [--edit] # Uncomment to automatically modify files
-    stages: [commit]
+# TODO: Enable once nix is actually installed
+# - repo: https://github.com/astro/deadnix
+#   rev: efcd46e3827d1e42e8f2f9cb045dfb34caeb43f5
+#   hooks:
+#   - id: deadnix
+#     #args: [--edit] # Uncomment to automatically modify files
+#     stages: [commit]
